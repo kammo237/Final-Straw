@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Have 1 New Message</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .window {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .title-bar {
+            background: linear-gradient(to right, #000080, #1084d0);
+            padding: 3px 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .title-text {
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .control-btn {
+            width: 18px;
+            height: 18px;
+            background: #c0c0c0;
+            border: 1px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .control-btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+
+        .content {
+            padding: 30px;
+            background: #c0c0c0;
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: #000000;
+        }
+
+        .message strong {
+            font-size: 20px;
+            display: block;
+            margin-top: 15px;
+            color: #000080;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 8px 25px;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 80px;
+            transition: all 0.1s;
+        }
+
+        .btn:hover {
+            background: #d4d4d4;
+        }
+
+        .btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+            padding: 9px 24px 7px 26px;
+        }
+
+        .btn-yes {
+            font-weight: bold;
+        }
+
+        .btn-no {
+            position: relative;
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 30px;
+            animation: float 3s ease-in forwards;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-1000px) rotate(360deg);
+            }
+        }
+
+        .celebration {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #d63384;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-text">
+                <span>💌</span>
+                <span>Important Message.exe</span>
+            </div>
+            <div class="window-controls">
+                <div class="control-btn">_</div>
+                <div class="control-btn">□</div>
+                <div class="control-btn">×</div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="icon">🥺</div>
+            <div class="message">
+                I've been wanting to ask you something...
+                <strong>Will you go out with me?</strong>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-yes" onclick="handleYes()">Yes! 💕</button>
+                <button class="btn btn-no" id="noBtn" onmouseover="moveButton()" onclick="moveButton()">No</button>
+            </div>
+            <div class="celebration" id="celebration">
+                🎉 You just made my day! 🎉
+            </div>
+        </div>
+    </div>
+
+    <div class="hearts" id="hearts"></div>
+
+    <script>
+        function handleYes() {
+            const celebration = document.getElementById('celebration');
+            const buttons = document.querySelector('.buttons');
+            const message = document.querySelector('.message');
+            const icon = document.querySelector('.icon');
+            
+            celebration.style.display = 'block';
+            buttons.style.display = 'none';
+            message.innerHTML = '<strong>Best decision ever! 😊</strong>';
+            icon.textContent = '🥰';
+            
+            // Create floating hearts
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => createHeart(), i * 100);
+            }
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = ['❤️', '💕', '💖', '💗', '💝'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.getElementById('hearts').appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 3000);
+        }
+
+        function moveButton() {
+            const btn = document.getElementById('noBtn');
+            const maxX = window.innerWidth - btn.offsetWidth - 40;
+            const maxY = window.innerHeight - btn.offsetHeight - 40;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            btn.style.position = 'fixed';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            btn.style.transition = 'all 0.3s ease';
+        }
+    </script>
+</body>
+</html>
